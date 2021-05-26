@@ -1,40 +1,39 @@
 'use strict'
 
+import { timerNumbers } from './const.js';
+
 var show = document.getElementById('clock');
 var reset = document.getElementById('reset');
 var start = document.getElementById('start');
 
-const zero = "00";
-
 var interval;
-var hour = zero;
-var minutes = zero;
-var secounds = zero;
+var hour = timerNumbers.w_zero;
+var minutes = timerNumbers.w_zero;
+var secounds = timerNumbers.w_zero;
 
+// startButton押下時
 start.addEventListener('click', function () {
     interval = setInterval(clock, 1000);
 }, false);
 
+// stopButton押下時
 reset.addEventListener('click', function () {
-    hour = zero;
-    minutes = zero;
-    secounds = zero;
+    hour = timerNumbers.w_zero;
+    minutes = timerNumbers.w_zero;
+    secounds = timerNumbers.w_zero;
     show.innerHTML = `${hour} : ${minutes} : ${secounds}`;
     clearInterval(interval);
 }, false);
 
 var clock = function () {
     function countUp() {
-        secounds++;
-        secounds = secounds > 9 ? secounds : `0${secounds}`;
-        if (secounds > 59) {
-            secounds = zero;
-            minutes++;
-            minutes = minutes > 9 ? minutes : `0${minutes}`;
-            if (minutes > 59) {
-                minutes = zero;
-                hour++;
-                hour = hour > 9 ? hour : `0${hour}`;
+        secounds = advanceTime(secounds);
+        if (secounds > timerNumbers.fifty_six) {
+            secounds = timerNumbers.w_zero;
+            minutes = advanceTime(minutes);
+            if (minutes > timerNumbers.fifty_six) {
+                minutes = timerNumbers.w_zero;
+                hour = advanceTime(hour);
             }
         }
         // 画面に表示
@@ -43,4 +42,8 @@ var clock = function () {
     return countUp();
 };
 
-
+// 1秒づつ時間を進める
+var advanceTime = (time) => {
+    time++;
+    return time > timerNumbers.nine ? time : `0${time}`;
+};

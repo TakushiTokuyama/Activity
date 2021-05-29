@@ -13,7 +13,7 @@ var targetSeconds = document.getElementById('targetSeconds');
 var interval;
 var hour = timerNumbers.w_zero;
 var minutes = timerNumbers.w_zero;
-var secounds = timerNumbers.w_zero;
+var seconds = timerNumbers.w_zero;
 
 // startButton押下時
 start.addEventListener('click', function () {
@@ -28,9 +28,9 @@ reset.addEventListener('click', function () {
 
 var clock = function () {
     function countUp() {
-        secounds = advanceTime(secounds);
-        if (secounds > timerNumbers.fifty_six) {
-            secounds = timerNumbers.w_zero;
+        seconds = advanceTime(seconds);
+        if (seconds > timerNumbers.fifty_six) {
+            seconds = timerNumbers.w_zero;
             minutes = advanceTime(minutes);
             if (minutes > timerNumbers.fifty_six) {
                 minutes = timerNumbers.w_zero;
@@ -38,7 +38,7 @@ var clock = function () {
             }
         }
         // 画面に表示
-        show.innerHTML = `${hour} : ${minutes} : ${secounds}`;
+        show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
         if (show.innerHTML === `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`) {
             alert("stop!!");
             initTimer();
@@ -58,6 +58,6 @@ var advanceTime = (time) => {
 var initTimer = function () {
     hour = timerNumbers.w_zero;
     minutes = timerNumbers.w_zero;
-    secounds = timerNumbers.w_zero;
-    show.innerHTML = `${hour} : ${minutes} : ${secounds}`;
+    seconds = timerNumbers.w_zero;
+    show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
 }

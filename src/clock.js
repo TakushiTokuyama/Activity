@@ -61,3 +61,19 @@ var initTimer = function () {
     seconds = timerNumbers.w_zero;
     show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
 }
+
+// validation
+var setTimerValidation = function (validHour, validMinutes, validSeconds) {
+    if (!(0 < parseInt(validHour) && parseInt(validHour) <= 60)) {
+        return true;
+    }
+
+    if (!(0 < parseInt(validMinutes) && parseInt(validMinutes) <= 60)) {
+        return true;
+    }
+
+    if (!(0 < parseInt(validSeconds) && parseInt(validSeconds) <= 60)) {
+        return true;
+    }
+    return false;
+}

@@ -26,6 +26,15 @@ reset.addEventListener('click', function () {
     clearInterval(interval);
 }, false);
 
+// inputEvent　Timer設定(時間)
+targetHour.addEventListener('input', isInputAndTimerValid, false);
+
+// inputEvent　Timer設定(分)
+targetMinutes.addEventListener('input', isInputAndTimerValid, false);
+
+// inputEvent　Timer設定(秒)
+targetSeconds.addEventListener('input', isInputAndTimerValid, false);
+
 var clock = function () {
     function countUp() {
         seconds = advanceTime(seconds);
@@ -63,18 +72,30 @@ var initTimer = function () {
     show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
 }
 
-// validation
-var setTimerValidation = function (validHour, validMinutes, validSeconds) {
-    if (!(0 < parseInt(validHour) && parseInt(validHour) <= 60)) {
-        return true;
-    }
-
-    if (!(0 < parseInt(validMinutes) && parseInt(validMinutes) <= 60)) {
-        return true;
-    }
-
-    if (!(0 < parseInt(validSeconds) && parseInt(validSeconds) <= 60)) {
+// Timerの妥当性確認
+var setTimerValidation = function () {
+    if ((0 < parseInt(targetHour.value) && parseInt(targetHour.value) <= 60) &&
+        (0 < parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= 60) &&
+        (0 < parseInt(targetSeconds.value) && parseInt(targetSeconds.value) <= 60)) {
         return true;
     }
     return false;
+}
+
+// 入力値の存在確認
+function isInputCheck() {
+    console.log(targetHour.value);
+    if (targetHour.value && targetMinutes.value && targetSeconds.value) {
+        return true;
+    }
+    return false;
+}
+
+// 入力値の存在確認とTimerの妥当性確認
+function isInputAndTimerValid() {
+    if (isInputCheck() && setTimerValidation()) {
+        start.disabled = false;
+    } else {
+        start.disabled = true;
+    }
 }

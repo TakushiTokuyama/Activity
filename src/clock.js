@@ -39,11 +39,12 @@ var clock = function () {
         }
         // 画面に表示
         show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
-        if (show.innerHTML === `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`) {
-            alert("stop!!");
-            initTimer();
-            clearInterval(interval);
-        }
+    }
+    if (show.innerHTML === `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`) {
+        alert("stop!!");
+        clearInterval(interval);
+        initTimer();
+        return;
     }
     return countUp();
 };

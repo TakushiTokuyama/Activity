@@ -15,6 +15,11 @@ var hour = timerNumbers.w_zero;
 var minutes = timerNumbers.w_zero;
 var seconds = timerNumbers.w_zero;
 
+// 初期表示
+window.onload = function () {
+    isInputAndTimerValid();
+}
+
 // startButton押下時
 start.addEventListener('click', function () {
     interval = setInterval(clock, 1000);

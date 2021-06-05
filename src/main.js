@@ -8,6 +8,7 @@ function createWindow() {
         width: 600,
         height: 400,
         webPreferences: {
+            nodeIntegration: false,
             contextIsolation: false,
             enableRemoteModule: true,
             preload: path.join(__dirname, 'preload.js')
@@ -58,6 +59,7 @@ app.on('window-all-closed', () => {
     }
 });
 
+// macos終了処理
 app.on('activate', () => {
     if (mainWindow == null) {
         createWindow();

@@ -55,7 +55,7 @@ var clock = function () {
         show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
     }
     if (show.innerHTML === `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`) {
-        alert("stop!!");
+        setTimeAlert();
         clearInterval(interval);
         initTimer();
         return;
@@ -103,4 +103,15 @@ function isInputAndTimerValid() {
     } else {
         start.disabled = true;
     }
+}
+
+// 設定時間が来た時のAlert
+function setTimeAlert() {
+    let w = remote.getCurrentWindow();
+    let setTimerAlertMessage = dialog.showMessageBox(w, {
+        title: 'Message',
+        message: 'お疲れ様です！',
+        detail: `${show.innerHTML}`
+    });
+    console.log(setTimerAlertMessage);
 }

@@ -79,8 +79,8 @@ var initTimer = function () {
 
 // Timerの妥当性確認
 var setTimerValidation = function () {
-    if ((0 < parseInt(targetHour.value) && parseInt(targetHour.value) <= 60) &&
-        (0 < parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= 60) &&
+    if ((0 <= parseInt(targetHour.value) && parseInt(targetHour.value) <= 60) &&
+        (0 <= parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= 60) &&
         (0 < parseInt(targetSeconds.value) && parseInt(targetSeconds.value) <= 60)) {
         return true;
     }

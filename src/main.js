@@ -1,13 +1,17 @@
 const { BrowserWindow, app, Menu } = require('electron');
+const path = require('path');
 
 let mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
+        width: 600,
+        height: 400,
         webPreferences: {
-            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            preload: path.join(__dirname, 'preload.js')
         },
-        width: 600, height: 400,
     });
 
     mainWindow.loadFile('index.html');

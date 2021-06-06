@@ -6,6 +6,8 @@ var show = document.getElementById('clock');
 var reset = document.getElementById('reset');
 var start = document.getElementById('start');
 
+var logTextarea = document.getElementById('logTextarea')
+
 var targetHour = document.getElementById('targetHour');
 var targetMinutes = document.getElementById('targetMinutes');
 var targetSeconds = document.getElementById('targetSeconds');
@@ -15,20 +17,26 @@ var hour = timerNumbers.w_zero;
 var minutes = timerNumbers.w_zero;
 var seconds = timerNumbers.w_zero;
 
+// 合計時間
+let totalTime;
+
 // 初期表示
 window.onload = function () {
     isInputAndTimerValid();
+    logTextarea.disabled = true;
 }
 
 // startButton押下時
 start.addEventListener('click', function () {
     interval = setInterval(clock, 1000);
+    console.log("Timer Start");
 }, false);
 
 // stopButton押下時
 reset.addEventListener('click', function () {
     initTimer();
     clearInterval(interval);
+    console.log("Timer Reset");
 }, false);
 
 // inputEvent　Timer設定(時間)
@@ -56,6 +64,7 @@ var clock = function () {
     }
     if (show.innerHTML === `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`) {
         setTimeAlert();
+        logDisplay();
         clearInterval(interval);
         initTimer();
         return;
@@ -114,4 +123,31 @@ function setTimeAlert() {
         detail: `${show.innerHTML}`
     });
     console.log(setTimerAlertMessage);
+}
+
+// logを画面に表示する処理
+function logDisplay() {
+    var currentTimes;
+    var totalTimes;
+    if (totalTime) {
+        currentTimes = show.innerHTML.replaceAll(' ', '').split(':').map(Number).reverse();
+        totalTimes = totalTime.replaceAll(' ', '').split(':').map(Number).reverse();
+        if (currentTimes[0] + totalTimes[0] >= timerNumbers.fifty_six) {
+            totalTimes[0] = currentTimes[0] + totalTimes[0] - timerNumbers.sixty;
+            totalTimes[1]++;
+        } else {
+            totalTimes[0] += currentTimes[0];
+        }
+
+        if (currentTimes[1] + totalTimes[1] >= timerNumbers.fifty_six) {
+            totalTimes[1] = currentTimes[1] + totalTimes[1] - timerNumbers.sixty;
+            totalTimes[2]++;
+        } else {
+            totalTimes[1] += currentTimes[1];
+        }
+        totalTime = (timerNumbers.w_zero + totalTimes[2]).slice(-2) + ' : ' + (timerNumbers.w_zero + totalTimes[1]).slice(-2) + ' : ' + (timerNumbers.w_zero + totalTimes[0]).slice(-2);
+    } else {
+        totalTime = show.innerHTML;
+    }
+    logTextarea.value += `FinishTime  ${show.innerHTML}` + "\n" + `TotalTime   ${totalTime}` + "\n";
 }

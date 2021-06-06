@@ -21,6 +21,15 @@ function createWindow() {
 
     initWindowMenu();
 
+    mainWindow.center();
+
+    // Windowサイズを固定
+    mainWindow.on('will-resize', (event) => {
+        event.preventDefault();
+        console.log("NotResize");
+    });
+
+    // Windowを閉じるときの処理
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
@@ -53,13 +62,14 @@ function initWindowMenu() {
 
 app.on('ready', createWindow);
 
+// macos終了処理
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
 });
 
-// macos終了処理
+// macos
 app.on('activate', () => {
     if (mainWindow == null) {
         createWindow();

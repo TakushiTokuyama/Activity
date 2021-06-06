@@ -1,7 +1,8 @@
-const { BrowserWindow, app, Menu } = require('electron');
+const { BrowserWindow, app, Menu, MenuItem } = require('electron');
 const path = require('path');
 
 let mainWindow;
+let linkSettingWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -15,7 +16,7 @@ function createWindow() {
         },
     });
 
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('./view/index.html');
 
     mainWindow.webContents.openDevTools();
 
@@ -37,13 +38,16 @@ function createWindow() {
 
 // MenuBar
 function initWindowMenu() {
-    const template = [
+
+    let menu = new Menu();
+
+    const links = new MenuItem(
         {
             label: 'Link',
             submenu: [
                 {
                     label: 'Top',
-                    click() { mainWindow.loadFile('index.html'); }
+                    click() { mainWindow.loadFile('./view/index.html'); }
                 },
                 {
                     label: 'GitHub',
@@ -55,8 +59,18 @@ function initWindowMenu() {
                 }
             ]
         },
-    ]
-    const menu = Menu.buildFromTemplate(template)
+    )
+
+    const linkSetting = new MenuItem(
+        {
+            label: 'LinkSetting',
+            click() { mainWindow.loadFile('./view/linkSetting.html'); }
+        },
+    )
+
+    menu.append(links);
+    menu.append(linkSetting);
+
     Menu.setApplicationMenu(menu)
 }
 

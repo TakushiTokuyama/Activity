@@ -1,0 +1,13 @@
+.vertical-top-5 {
+  margin-top:5px;
+}
+
+input {
+    text-align: left;
+}
+
+input::placeholder{
+  text-align: left;
+  color: white;
+  font-weight: bold;
+}

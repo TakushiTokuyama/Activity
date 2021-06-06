@@ -1,0 +1,23 @@
+.gutter-10.row {
+  margin-right: -5px;
+  margin-left: -5px;
+}
+.gutter-10 > [class^="col-"], .gutter-10 > [class^=" col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.vertical-10 {
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
+input {
+    text-align: center;
+}
+
+input::placeholder{
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}

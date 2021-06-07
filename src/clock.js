@@ -123,6 +123,11 @@ function setTimeAlert() {
         detail: `${show.innerHTML}`
     });
     console.log(setTimerAlertMessage);
+
+    // 現在のwindowを呼び出す
+    const currentWindow = window.remote.getCurrentWindow();
+    // windowを表示させる
+    currentWindow.show();
 }
 
 // logを画面に表示する処理

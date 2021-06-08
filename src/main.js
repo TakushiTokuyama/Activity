@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
-let linkSettingWindow;
 let linkSettingJson;
 
 function createWindow() {

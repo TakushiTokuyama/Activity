@@ -4,8 +4,15 @@ const Menu = window.remote.Menu;
 
 const setLinkSubmit = document.getElementById('setLinkSubmit');
 
+const linkNameElements = document.getElementsByClassName('linkName');
+const linkUrlElements = document.getElementsByClassName('linkUrl');
+
 // Submit押下時
 setLinkSubmit.addEventListener('click', function () {
+
+    let linkNameValues = setArrayValues(linkNameElements);
+    let linkUrlValues = setArrayValues(linkUrlElements);
+
     let menus = new window.remote.Menu();
 
     const links = new window.remote.MenuItem(
@@ -40,3 +47,13 @@ setLinkSubmit.addEventListener('click', function () {
 
     Menu.setApplicationMenu(menus)
 }, false);
+
+// Elementの値を配列に格納する処理
+function setArrayValues(element) {
+    var values = [];
+    for (var i = 0; i < element.length; i++) {
+        values.push(element[i].value);
+    }
+    console.log(values);
+    return values;
+}

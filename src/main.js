@@ -1,8 +1,9 @@
 const { BrowserWindow, app, Menu, MenuItem } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 let mainWindow;
-let linkSettingWindow;
+let linkSettingJson;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -24,6 +25,8 @@ function createWindow() {
 
     mainWindow.center();
 
+    console.log('createBrowserWindow');
+
     // Windowサイズを固定
     mainWindow.on('will-resize', (event) => {
         event.preventDefault();
@@ -39,6 +42,8 @@ function createWindow() {
 // MenuBar
 function initWindowMenu() {
 
+    let linkNames = Object.keys(linkSettingJson);
+
     let menu = new Menu();
 
     const links = new MenuItem(
@@ -50,12 +55,28 @@ function initWindowMenu() {
                     click() { mainWindow.loadFile('./view/index.html'); }
                 },
                 {
-                    label: 'GitHub',
-                    click() { mainWindow.loadURL('https://github.com/'); }
+                    label: linkNames[0],
+                    click() { mainWindow.loadURL(linkSettingJson[linkNames[0]]); }
                 },
                 {
-                    label: 'HatenaBlog',
-                    click() { mainWindow.loadURL('https://tokuty.hatenablog.com/'); }
+                    label: linkNames[1],
+                    click() { mainWindow.loadURL(linkSettingJson[linkNames[1]]); }
+                },
+                {
+                    label: linkNames[2],
+                    click() { mainWindow.loadURL(linkSettingJson[linkNames[2]]); }
+                },
+                {
+                    label: linkNames[3],
+                    click() { mainWindow.loadURL(linkSettingJson[linkNames[3]]); }
+                },
+                {
+                    label: linkNames[4],
+                    click() { mainWindow.loadURL(linkSettingJson[linkNames[4]]); }
+                },
+                {
+                    label: linkNames[5],
+                    click() { mainWindow.loadURL(linkSettingJson[linkNames[5]]); }
                 }
             ]
         },
@@ -75,6 +96,12 @@ function initWindowMenu() {
 }
 
 app.on('ready', createWindow);
+
+// 起動処理の完了時
+app.on('will-finish-launching', () => {
+    linkSettingJson = JSON.parse(fs.readFileSync('./src/settings/linkSetting.json', 'utf8'));
+    console.log(linkSettingJson);
+});
 
 // macos終了処理
 app.on('window-all-closed', () => {

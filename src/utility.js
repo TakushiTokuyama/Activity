@@ -28,7 +28,12 @@ export function writeFile(filePath, data) {
         if (err) {
             dialog.showErrorBox(err.code + err.errno, err.message);
         } else {
-            alert('リンクを保存しました');
+            let w = remote.getCurrentWindow();
+            let writeSuccessMessage = dialog.showMessageBox(w, {
+                title: 'Message',
+                message: 'リンクを保存しました',
+            });
+            console.log(writeSuccessMessage);
         }
     });
 }

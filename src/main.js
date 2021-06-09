@@ -99,6 +99,25 @@ app.on('ready', createWindow);
 
 // 起動処理の完了時
 app.on('will-finish-launching', () => {
+    try {
+        fs.statSync('./src/settings/linkSetting.json');
+        console.log('ファイルが存在します');
+    } catch (error) {
+        const data = {
+            "none1": "",
+            "none2": "",
+            "none3": "",
+            "none4": "",
+            "none5": "",
+            "none6": ""
+        }
+        if (error.code === 'ENOENT') {
+            console.log('ファイルは存在しません、作成します');
+            fs.writeFileSync('./src/settings/linkSetting.json', JSON.stringify(data));
+        } else {
+            console.log(error);
+        }
+    }
     linkSettingJson = JSON.parse(fs.readFileSync('./src/settings/linkSetting.json', 'utf8'));
     console.log(linkSettingJson);
 });

@@ -9,6 +9,8 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 360,
+        movable: false,
+        maximizable: false,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: false,
@@ -26,12 +28,6 @@ function createWindow() {
     mainWindow.center();
 
     console.log('createBrowserWindow');
-
-    // Windowサイズを固定
-    mainWindow.on('will-resize', (event) => {
-        event.preventDefault();
-        console.log("NotResize");
-    });
 
     // Windowを閉じるときの処理
     mainWindow.on('closed', () => {

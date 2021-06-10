@@ -9,6 +9,8 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 360,
+        movable: false,
+        maximizable: false,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: false,
@@ -26,12 +28,6 @@ function createWindow() {
     mainWindow.center();
 
     console.log('createBrowserWindow');
-
-    // Windowサイズを固定
-    mainWindow.on('will-resize', (event) => {
-        event.preventDefault();
-        console.log("NotResize");
-    });
 
     // Windowを閉じるときの処理
     mainWindow.on('closed', () => {
@@ -56,27 +52,27 @@ function initWindowMenu() {
                 },
                 {
                     label: linkNames[0],
-                    click() { mainWindow.loadURL(linkSettingJson[linkNames[0]]); }
+                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[0]]); }
                 },
                 {
                     label: linkNames[1],
-                    click() { mainWindow.loadURL(linkSettingJson[linkNames[1]]); }
+                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[1]]); }
                 },
                 {
                     label: linkNames[2],
-                    click() { mainWindow.loadURL(linkSettingJson[linkNames[2]]); }
+                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[2]]); }
                 },
                 {
                     label: linkNames[3],
-                    click() { mainWindow.loadURL(linkSettingJson[linkNames[3]]); }
+                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[3]]); }
                 },
                 {
                     label: linkNames[4],
-                    click() { mainWindow.loadURL(linkSettingJson[linkNames[4]]); }
+                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[4]]); }
                 },
                 {
                     label: linkNames[5],
-                    click() { mainWindow.loadURL(linkSettingJson[linkNames[5]]); }
+                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[5]]); }
                 }
             ]
         },
@@ -135,3 +131,17 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
+// 新しいWindowを生成
+function createNewBrowser() {
+    var linkWindow = new BrowserWindow({
+        width: 800,
+        height: 360,
+        parent: mainWindow,
+        webPreferences: {
+            nodeIntegration: false,
+        },
+    });
+
+    return linkWindow;
+}

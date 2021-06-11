@@ -7,6 +7,17 @@ const setLinkSubmit = document.getElementById('setLinkSubmit');
 const linkNameElements = document.getElementsByClassName('linkName');
 const linkUrlElements = document.getElementsByClassName('linkUrl');
 
+// 初期表示
+window.onload = function () {
+    let datas = utility.readFile('./src/settings/linkSetting.json');
+    let [links, urls] = utility.convertAssociativeArrayToArray(datas);
+
+    for (var i = 0; i < links.length; i++) {
+        linkNameElements[i].value = links[i];
+        linkUrlElements[i].value = urls[i];
+    }
+}
+
 // Submit押下時
 setLinkSubmit.addEventListener('click', function () {
 

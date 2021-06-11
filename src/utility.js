@@ -22,6 +22,26 @@ export function convertObjectToJson(associativeArray) {
     return JSON.stringify(associativeArray);
 }
 
+// ファイル読込処理
+export function readFile(filePath) {
+    try {
+        var datas = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (error) {
+        console.log(error.message);
+    }
+    return datas;
+}
+
+// 連想配列を配列にする処理
+export function convertAssociativeArrayToArray(datas) {
+    var keys = Object.keys(datas);
+    var values = keys.map((data) => {
+        return datas[data];
+    });
+    
+    return [keys, values];
+}
+
 // ファイル書込処理
 export function writeFile(filePath, data) {
     fs.writeFile(filePath, data, (err) => {

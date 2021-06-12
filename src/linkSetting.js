@@ -1,5 +1,4 @@
 'use strict'
-
 import * as utility from './utility.js';
 
 const setLinkSubmit = document.getElementById('setLinkSubmit');
@@ -31,7 +30,11 @@ setLinkSubmit.addEventListener('click', function () {
     // ObjectをJsonに変換
     let jsonData = utility.convertObjectToJson(linkNameAndUrls);
 
+    // 設定を書き込む
     utility.writeFile('./src/settings/linkSetting.json', jsonData);
+
+    // メニューバーをreload
+    ipcRenderer.send('reload');
 }, false);
 
 // リンクの名前が存在しなかったらデフォルトの名前を設定する処理

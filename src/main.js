@@ -1,4 +1,4 @@
-const { BrowserWindow, app, Menu, MenuItem } = require('electron');
+const { BrowserWindow, app, Menu, MenuItem, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -145,3 +145,10 @@ function createNewBrowser() {
 
     return linkWindow;
 }
+
+// メニューバーをreload
+ipcMain.on('reload', (event, data) => {
+    console.log('reload');
+    linkSettingJson = JSON.parse(fs.readFileSync('./src/settings/linkSetting.json', 'utf8'));
+    initWindowMenu();
+});

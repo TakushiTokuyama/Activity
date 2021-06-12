@@ -2,7 +2,7 @@
 
 import { timerNumbers } from './const.js';
 
-var show = document.getElementById('clock');
+var show = document.getElementById('timer');
 var reset = document.getElementById('reset');
 var start = document.getElementById('start');
 
@@ -28,7 +28,7 @@ window.onload = function () {
 
 // startButton押下時
 start.addEventListener('click', function () {
-    interval = setInterval(clock, 1000);
+    interval = setInterval(timer, 1000);
     console.log("Timer Start");
 }, false);
 
@@ -48,7 +48,7 @@ targetMinutes.addEventListener('input', isInputAndTimerValid, false);
 // inputEvent　Timer設定(秒)
 targetSeconds.addEventListener('input', isInputAndTimerValid, false);
 
-var clock = function () {
+var timer = function () {
     function countUp() {
         seconds = advanceTime(seconds);
         if (seconds > timerNumbers.fifty_six) {

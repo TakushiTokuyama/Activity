@@ -152,3 +152,9 @@ ipcMain.on('reload', (event, data) => {
     linkSettingJson = JSON.parse(fs.readFileSync('./src/settings/linkSetting.json', 'utf8'));
     initWindowMenu();
 });
+
+// windowを表示させる
+ipcMain.on('show-window', (event, data) => {
+    console.log('window-show');
+    mainWindow.show();
+});

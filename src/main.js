@@ -37,9 +37,6 @@ function createWindow() {
 
 // MenuBar
 function initWindowMenu() {
-
-    let linkNames = Object.keys(linkSettingJson);
-
     let menu = new Menu();
 
     const links = new MenuItem(
@@ -50,30 +47,6 @@ function initWindowMenu() {
                     label: 'Top',
                     click() { mainWindow.loadFile('./view/index.html'); }
                 },
-                {
-                    label: linkNames[0],
-                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[0]]); }
-                },
-                {
-                    label: linkNames[1],
-                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[1]]); }
-                },
-                {
-                    label: linkNames[2],
-                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[2]]); }
-                },
-                {
-                    label: linkNames[3],
-                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[3]]); }
-                },
-                {
-                    label: linkNames[4],
-                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[4]]); }
-                },
-                {
-                    label: linkNames[5],
-                    click() { createNewBrowser().loadURL(linkSettingJson[linkNames[5]]); }
-                }
             ]
         },
     )
@@ -84,6 +57,10 @@ function initWindowMenu() {
             click() { mainWindow.loadFile('./view/linkSetting.html'); }
         },
     )
+
+    // link設定
+    let linkNames = Object.keys(linkSettingJson);
+    linkNames.forEach((linkName) => (links.submenu.append(new MenuItem({ label: linkName, click() { createNewBrowser().loadURL(linkSettingJson[linkName]) } }))));
 
     menu.append(links);
     menu.append(linkSetting);
@@ -99,17 +76,9 @@ app.on('will-finish-launching', () => {
         fs.statSync('./src/settings/linkSetting.json');
         console.log('ファイルが存在します');
     } catch (error) {
-        const data = {
-            "none1": "",
-            "none2": "",
-            "none3": "",
-            "none4": "",
-            "none5": "",
-            "none6": ""
-        }
         if (error.code === 'ENOENT') {
             console.log('ファイルは存在しません、作成します');
-            fs.writeFileSync('./src/settings/linkSetting.json', JSON.stringify(data, null, 2));
+            fs.writeFileSync('./src/settings/linkSetting.json', "{}");
         } else {
             console.log(error);
         }

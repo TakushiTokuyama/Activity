@@ -3,8 +3,10 @@
 import * as constants from './common/const.js';
 
 var show = document.getElementById('timer');
-var reset = document.getElementById('reset');
 var start = document.getElementById('start');
+var stop = document.getElementById('stop');
+var reset = document.getElementById('reset');
+
 
 var logTextarea = document.getElementById('logTextarea')
 
@@ -24,18 +26,29 @@ let totalTime;
 window.onload = function () {
     isInputAndTimerValid();
     logTextarea.disabled = true;
+    reset.disabled = true;
 }
 
 // startButton押下時
 start.addEventListener('click', function () {
     interval = setInterval(timer, 1000);
+    start.disabled = true;
+    reset.disabled = false;
     console.log("Timer Start");
 }, false);
 
 // stopButton押下時
+stop.addEventListener('click', function () {
+    clearInterval(interval);
+    console.log('Timer Stop');
+}, false);
+
+// resetButton押下時
 reset.addEventListener('click', function () {
     initTimer();
     clearInterval(interval);
+    start.disabled = false;
+    reset.disabled = true;
     console.log("Timer Reset");
 }, false);
 
@@ -122,7 +135,9 @@ function setTimeAlert() {
         message: constants.MESSAGE.FINISH,
         detail: `${show.innerHTML}`
     }).then((event) => {
-        if(event){
+        if (event) {
+            start.disabled = false;
+            reset.disabled = true;
             ipcRenderer.send('show-window');
         }
     });

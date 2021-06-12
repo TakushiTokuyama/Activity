@@ -1,4 +1,4 @@
-const { BrowserWindow, app, Menu, MenuItem } = require('electron');
+const { BrowserWindow, app, Menu, MenuItem, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -9,7 +9,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 360,
-        movable: false,
+        resizable: false,
         maximizable: false,
         webPreferences: {
             nodeIntegration: false,
@@ -109,7 +109,7 @@ app.on('will-finish-launching', () => {
         }
         if (error.code === 'ENOENT') {
             console.log('ファイルは存在しません、作成します');
-            fs.writeFileSync('./src/settings/linkSetting.json', JSON.stringify(data));
+            fs.writeFileSync('./src/settings/linkSetting.json', JSON.stringify(data, null, 2));
         } else {
             console.log(error);
         }
@@ -145,3 +145,10 @@ function createNewBrowser() {
 
     return linkWindow;
 }
+
+// メニューバーをreload
+ipcMain.on('reload', (event, data) => {
+    console.log('reload');
+    linkSettingJson = JSON.parse(fs.readFileSync('./src/settings/linkSetting.json', 'utf8'));
+    initWindowMenu();
+});

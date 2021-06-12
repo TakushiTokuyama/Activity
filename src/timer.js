@@ -1,8 +1,8 @@
 'use strict'
 
-import { timerNumbers } from './const.js';
+import * as constants from './common/const.js';
 
-var show = document.getElementById('clock');
+var show = document.getElementById('timer');
 var reset = document.getElementById('reset');
 var start = document.getElementById('start');
 
@@ -13,9 +13,9 @@ var targetMinutes = document.getElementById('targetMinutes');
 var targetSeconds = document.getElementById('targetSeconds');
 
 var interval;
-var hour = timerNumbers.w_zero;
-var minutes = timerNumbers.w_zero;
-var seconds = timerNumbers.w_zero;
+var hour = constants.TIMERNUMBER.W_ZERO;
+var minutes = constants.TIMERNUMBER.W_ZERO;
+var seconds = constants.TIMERNUMBER.W_ZERO;
 
 // 合計時間
 let totalTime;
@@ -28,7 +28,7 @@ window.onload = function () {
 
 // startButton押下時
 start.addEventListener('click', function () {
-    interval = setInterval(clock, 1000);
+    interval = setInterval(timer, 1000);
     console.log("Timer Start");
 }, false);
 
@@ -48,14 +48,14 @@ targetMinutes.addEventListener('input', isInputAndTimerValid, false);
 // inputEvent　Timer設定(秒)
 targetSeconds.addEventListener('input', isInputAndTimerValid, false);
 
-var clock = function () {
+var timer = function () {
     function countUp() {
         seconds = advanceTime(seconds);
-        if (seconds > timerNumbers.fifty_six) {
-            seconds = timerNumbers.w_zero;
+        if (seconds > constants.TIMERNUMBER.FIFTY_SIX) {
+            seconds = constants.TIMERNUMBER.W_ZERO;
             minutes = advanceTime(minutes);
-            if (minutes > timerNumbers.fifty_six) {
-                minutes = timerNumbers.w_zero;
+            if (minutes > constants.TIMERNUMBER.FIFTY_SIX) {
+                minutes = constants.TIMERNUMBER.w_zero;
                 hour = advanceTime(hour);
             }
         }
@@ -75,14 +75,14 @@ var clock = function () {
 // 1秒づつ時間を進める
 var advanceTime = (time) => {
     time++;
-    return time > timerNumbers.nine ? time : `0${time}`;
+    return time > constants.TIMERNUMBER.NINE ? time : `0${time}`;
 };
 
 // Timer初期化処理
 var initTimer = function () {
-    hour = timerNumbers.w_zero;
-    minutes = timerNumbers.w_zero;
-    seconds = timerNumbers.w_zero;
+    hour = constants.TIMERNUMBER.W_ZERO;
+    minutes = constants.TIMERNUMBER.W_ZERO;
+    seconds = constants.TIMERNUMBER.W_ZERO;
     show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
 }
 
@@ -118,8 +118,8 @@ function isInputAndTimerValid() {
 function setTimeAlert() {
     let w = remote.getCurrentWindow();
     let setTimerAlertMessage = dialog.showMessageBox(w, {
-        title: 'Message',
-        message: 'お疲れ様です！',
+        title: constants.TITLE.FINISH,
+        message: constants.MESSAGE.FINISH,
         detail: `${show.innerHTML}`
     });
     console.log(setTimerAlertMessage);
@@ -137,20 +137,20 @@ function logDisplay() {
     if (totalTime) {
         currentTimes = show.innerHTML.replaceAll(' ', '').split(':').map(Number).reverse();
         totalTimes = totalTime.replaceAll(' ', '').split(':').map(Number).reverse();
-        if (currentTimes[0] + totalTimes[0] >= timerNumbers.fifty_six) {
-            totalTimes[0] = currentTimes[0] + totalTimes[0] - timerNumbers.sixty;
+        if (currentTimes[0] + totalTimes[0] >= constants.TIMERNUMBER.FIFTY_SIX) {
+            totalTimes[0] = currentTimes[0] + totalTimes[0] - constants.TIMERNUMBER.SIXTY;
             totalTimes[1]++;
         } else {
             totalTimes[0] += currentTimes[0];
         }
 
-        if (currentTimes[1] + totalTimes[1] >= timerNumbers.fifty_six) {
-            totalTimes[1] = currentTimes[1] + totalTimes[1] - timerNumbers.sixty;
+        if (currentTimes[1] + totalTimes[1] >= constants.TIMERNUMBER.FIFTY_SIX) {
+            totalTimes[1] = currentTimes[1] + totalTimes[1] - constants.TIMERNUMBER.SIXTY;
             totalTimes[2]++;
         } else {
             totalTimes[1] += currentTimes[1];
         }
-        totalTime = (timerNumbers.w_zero + totalTimes[2]).slice(-2) + ' : ' + (timerNumbers.w_zero + totalTimes[1]).slice(-2) + ' : ' + (timerNumbers.w_zero + totalTimes[0]).slice(-2);
+        totalTime = (constants.TIMERNUMBER.W_ZERO + totalTimes[2]).slice(-2) + ' : ' + (constants.TIMERNUMBER.W_ZERO + totalTimes[1]).slice(-2) + ' : ' + (constants.TIMERNUMBER.W_ZERO + totalTimes[0]).slice(-2);
     } else {
         totalTime = show.innerHTML;
     }

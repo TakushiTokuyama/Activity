@@ -1,3 +1,5 @@
+import * as constants from './const.js';
+
 // 配列に格納する処理
 export function setArrayValues(element) {
     var values = [];
@@ -38,22 +40,23 @@ export function convertAssociativeArrayToArray(datas) {
     var values = keys.map((data) => {
         return datas[data];
     });
-    
+
     return [keys, values];
 }
 
 // ファイル書込処理
 export function writeFile(filePath, data) {
-    fs.writeFile(filePath, data, (err) => {
-        if (err) {
-            dialog.showErrorBox(err.code + err.errno, err.message);
-        } else {
-            let w = remote.getCurrentWindow();
-            let writeSuccessMessage = dialog.showMessageBox(w, {
-                title: 'Message',
-                message: 'リンクを保存しました',
-            });
-            console.log(writeSuccessMessage);
-        }
-    });
+    try {
+        fs.writeFileSync(filePath, data);
+
+        let w = remote.getCurrentWindow();
+        let writeSuccessMessage = dialog.showMessageBox(w, {
+            title: constants.TITLE.FILE_SAVE,
+            message: constants.MESSAGE.FILE_SAVE,
+        });
+        console.log(writeSuccessMessage);
+    } catch (ex) {
+        console.log(ex);
+        dialog.showErrorBox(err.code + err.errno, err.message);
+    }
 }

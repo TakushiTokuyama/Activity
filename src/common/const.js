@@ -1,5 +1,6 @@
 // timer
 export const TIMERNUMBER = {
+    ZERO: "0",
     W_ZERO: "00",
     FIFTY_SIX: "59",
     SIXTY: "60",

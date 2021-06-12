@@ -1,5 +1,5 @@
 'use strict'
-import * as utility from './common/utility.js';
+import * as utility from '../common/utility.js';
 
 const setLinkSubmit = document.getElementById('setLinkSubmit');
 

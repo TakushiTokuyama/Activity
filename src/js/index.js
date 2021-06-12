@@ -1,23 +1,23 @@
 'use strict'
 
-import * as constants from './common/const.js';
+import * as constants from '../common/const.js';
 
-var show = document.getElementById('timer');
-var start = document.getElementById('start');
-var stop = document.getElementById('stop');
-var reset = document.getElementById('reset');
+const show = document.getElementById('timer');
+const start = document.getElementById('start');
+const stop = document.getElementById('stop');
+const reset = document.getElementById('reset');
 
 
-var logTextarea = document.getElementById('logTextarea')
+const logTextarea = document.getElementById('logTextarea')
 
-var targetHour = document.getElementById('targetHour');
-var targetMinutes = document.getElementById('targetMinutes');
-var targetSeconds = document.getElementById('targetSeconds');
+const targetHour = document.getElementById('targetHour');
+const targetMinutes = document.getElementById('targetMinutes');
+const targetSeconds = document.getElementById('targetSeconds');
 
-var interval;
-var hour = constants.TIMERNUMBER.W_ZERO;
-var minutes = constants.TIMERNUMBER.W_ZERO;
-var seconds = constants.TIMERNUMBER.W_ZERO;
+let interval;
+let hour = constants.TIMERNUMBER.W_ZERO;
+let minutes = constants.TIMERNUMBER.W_ZERO;
+let seconds = constants.TIMERNUMBER.W_ZERO;
 
 // 合計時間
 let totalTime;
@@ -31,6 +31,8 @@ window.onload = function () {
 
 // startButton押下時
 start.addEventListener('click', function () {
+    // 設定時間のフォーマット整形
+    setCorrectFormatTime();
     interval = setInterval(timer, 1000);
     start.disabled = true;
     reset.disabled = false;
@@ -101,9 +103,9 @@ var initTimer = function () {
 
 // Timerの妥当性確認
 var setTimerValidation = function () {
-    if ((0 <= parseInt(targetHour.value) && parseInt(targetHour.value) <= 60) &&
-        (0 <= parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= 60) &&
-        (0 < parseInt(targetSeconds.value) && parseInt(targetSeconds.value) <= 60)) {
+    if ((constants.TIMERNUMBER.ZERO <= parseInt(targetHour.value) && parseInt(targetHour.value) <= constants.TIMERNUMBER.SIXTY) &&
+        (constants.TIMERNUMBER.ZERO <= parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= constants.TIMERNUMBER.SIXTY) &&
+        (constants.TIMERNUMBER.ZERO < parseInt(targetSeconds.value) && parseInt(targetSeconds.value) <= constants.TIMERNUMBER.SIXTY)) {
         return true;
     }
     return false;
@@ -126,6 +128,14 @@ function isInputAndTimerValid() {
         start.disabled = true;
     }
 }
+
+// Timer設定値の整形
+function setCorrectFormatTime() {
+    targetHour.value = ("00" + targetHour.value).slice(-2);
+    targetMinutes.value = ("00" + targetMinutes.value).slice(-2);
+    targetSeconds.value = ("00" + targetSeconds.value).slice(-2);
+}
+
 
 // 設定時間が来た時のAlert
 function setTimeAlert() {

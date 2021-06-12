@@ -19,7 +19,7 @@ export function setAssociativeArray(keys, values) {
 
 // objectをJsonに変換
 export function convertObjectToJson(associativeArray) {
-    return JSON.stringify(associativeArray);
+    return JSON.stringify(associativeArray, null, 2);
 }
 
 // ファイル読込処理

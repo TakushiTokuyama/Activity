@@ -109,7 +109,7 @@ app.on('will-finish-launching', () => {
         }
         if (error.code === 'ENOENT') {
             console.log('ファイルは存在しません、作成します');
-            fs.writeFileSync('./src/settings/linkSetting.json', JSON.stringify(data));
+            fs.writeFileSync('./src/settings/linkSetting.json', JSON.stringify(data, null, 2));
         } else {
             console.log(error);
         }

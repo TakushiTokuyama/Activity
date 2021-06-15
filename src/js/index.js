@@ -1,6 +1,7 @@
 'use strict'
 
 import * as constants from '../common/const.js';
+import * as utility from '../common/utility.js';
 
 const show = document.getElementById('timer');
 const start = document.getElementById('start');
@@ -13,6 +14,9 @@ const logTextarea = document.getElementById('logTextarea')
 const targetHour = document.getElementById('targetHour');
 const targetMinutes = document.getElementById('targetMinutes');
 const targetSeconds = document.getElementById('targetSeconds');
+
+const category = document.getElementById('category');
+const contents = document.getElementById('contents');
 
 let interval;
 let hour = constants.TIMERNUMBER.W_ZERO;
@@ -27,6 +31,7 @@ window.onload = function () {
     isInputAndTimerValid();
     logTextarea.disabled = true;
     reset.disabled = true;
+    getActivityCategorys();
 }
 
 // startButton押下時
@@ -81,6 +86,7 @@ var timer = function () {
         setTimeAlert();
         logDisplay();
         clearInterval(interval);
+        writeActivityData();
         initTimer();
         return;
     }
@@ -179,4 +185,49 @@ function logDisplay() {
         totalTime = show.innerHTML;
     }
     logTextarea.value += `FinishTime  ${show.innerHTML}` + "\n" + `TotalTime   ${totalTime}` + "\n";
+}
+
+// autocompleteにcategoryを設定する
+function setAutocompleteCategorys(categorys) {
+    var datalist = document.createElement('datalist');
+    datalist.id = 'category_list';
+    categorys.forEach(value => {
+        var option = document.createElement('option');
+        option.value = value;
+        datalist.appendChild(option);
+    });
+    category.appendChild(datalist);
+}
+
+// activityのcaterogyを取得
+function getActivityCategorys() {
+    let activityFile = utility.readFile('./src/data/activity.json');
+    if (activityFile !== "") {
+        let activityJsonData = JSON.parse(activityFile);
+        let categorys = activityJsonData.map(value => value.category);
+        setAutocompleteCategorys(categorys);
+    }
+}
+
+// activityDataをactivity.jsonに書込
+function writeActivityData() {
+
+    let activityFile = utility.readFile('./src/data/activity.json');
+
+    let activityObject = activityFile !== "" ? JSON.parse(activityFile) : new Array();
+
+    let activityData = {
+        'activityDateTime': new Date().toLocaleDateString(),
+        'category': category.value,
+        'contents': contents.value,
+        'activityTime': `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`
+    };
+
+    activityObject.push(activityData);
+
+    // ObjectをJsonに変換
+    let activityJsonData = utility.convertObjectToJson(activityObject);
+
+    // json書込
+    utility.writeFile('./src/data/activity.json', activityJsonData);
 }

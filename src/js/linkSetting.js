@@ -1,5 +1,7 @@
 'use strict'
 import * as utility from '../common/utility.js';
+import * as dialogBox from '../common/dialogBox.js';
+import * as constants from '../common/const.js';
 
 const setLinkSubmit = document.getElementById('setLinkSubmit');
 
@@ -9,11 +11,13 @@ const linkUrlElements = document.getElementsByClassName('linkUrl');
 // 初期表示
 window.onload = function () {
     let datas = utility.readFile('./src/settings/linkSetting.json');
-    let [links, urls] = utility.convertAssociativeArrayToArray(datas);
+    if (datas !== "") {
+        let [links, urls] = utility.convertAssociativeArrayToArray(JSON.parse(datas));
 
-    for (var i = 0; i < links.length; i++) {
-        linkNameElements[i].value = links[i];
-        linkUrlElements[i].value = urls[i];
+        for (var i = 0; i < links.length; i++) {
+            linkNameElements[i].value = links[i];
+            linkUrlElements[i].value = urls[i];
+        }
     }
 }
 
@@ -32,6 +36,9 @@ setLinkSubmit.addEventListener('click', function () {
 
     // 設定を書き込む
     utility.writeFile('./src/settings/linkSetting.json', jsonData);
+
+    // dialog表示
+    dialogBox.message(constants.TITLE.FILE_SAVE, constants.MESSAGE.FILE_SAVE)
 
     // メニューバーをreload
     ipcRenderer.send('reload');

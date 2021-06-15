@@ -1,5 +1,3 @@
-import * as constants from './const.js';
-
 // 配列に格納する処理
 export function setArrayValues(element) {
     var values = [];
@@ -27,7 +25,7 @@ export function convertObjectToJson(associativeArray) {
 // ファイル読込処理
 export function readFile(filePath) {
     try {
-        var datas = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        var datas = fs.readFileSync(filePath, 'utf8');
     } catch (error) {
         console.log(error.message);
     }
@@ -48,15 +46,7 @@ export function convertAssociativeArrayToArray(datas) {
 export function writeFile(filePath, data) {
     try {
         fs.writeFileSync(filePath, data);
-
-        let w = remote.getCurrentWindow();
-        let writeSuccessMessage = dialog.showMessageBox(w, {
-            title: constants.TITLE.FILE_SAVE,
-            message: constants.MESSAGE.FILE_SAVE,
-        });
-        console.log(writeSuccessMessage);
     } catch (ex) {
         console.log(ex);
-        dialog.showErrorBox(err.code + err.errno, err.message);
     }
 }

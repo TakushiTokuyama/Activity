@@ -1,6 +1,7 @@
 const { BrowserWindow, app, Menu, MenuItem, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const dbSetttings = require('./common/dbSettings');
 
 let mainWindow;
 let linkSettingData;
@@ -120,6 +121,8 @@ ipcMain.on('show-window', (event, data) => {
 
 // 初期設定
 function initSettings() {
+    // DB初期設定
+    dbSetttings.initDbCreate();
     try {
         fs.statSync('./src/settings/linkSetting.json');
         console.log('ファイルが存在します');

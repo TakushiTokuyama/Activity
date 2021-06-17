@@ -45,7 +45,7 @@
                 <div class="row gutter-10 vertical-10">
                     <div class="col-4">
                         <input id="category" type="text" class="form-control" value="" placeholder="category"
-                            aria-label="set_category">
+                            aria-label="set_category" autocomplete="on" list="category_list">
                     </div>
                     <div class="col-8">
                         <input id="contents" type="text" class="form-control" value="" placeholder="contents"
@@ -54,26 +54,25 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row gutter-10">
-            <div class="col-4">
-                <canvas id="myActivityChart" width="400" height=400"></canvas>
-            </div>
-            <div class="col-4">
-                <div class="input-group vertical-10">
-                    <textarea id="memo" class="form-control" rows="12" aria-label="With textarea"
-                        placeholder="memo"></textarea>
+        <div class="container-fluid">
+            <div class="row gutter-10">
+                <div class="col-4">
+                    <canvas id="myActivityChart" width="400" height=400"></canvas>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="input-group vertical-10">
-                    <textarea id="logTextarea" class="form-control" rows="12" aria-label="With textarea"
-                        placeholder="log"></textarea>
+                <div class="col-4">
+                    <div class="input-group vertical-10">
+                        <textarea id="memo" class="form-control" rows="12" aria-label="With textarea"
+                            placeholder="memo"></textarea>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group vertical-10">
+                        <textarea id="logTextarea" class="form-control" rows="12" aria-label="With textarea"
+                            placeholder="log"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <script src="./../js/index.js" type="module"></script>
     <script src="./../js/activityChart.js" type="module"></script>

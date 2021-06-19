@@ -1,7 +1,6 @@
 'use strict'
 
 import * as constants from '../common/const.js';
-import * as utility from '../common/utility.js';
 
 const show = document.getElementById('timer');
 const start = document.getElementById('start');

@@ -1,5 +1,5 @@
 // 配列に格納する処理
-export function setArrayValues(element) {
+exports.setAssociativeArray = function setArrayValues(element) {
     var values = [];
     for (var i = 0; i < element.length; i++) {
         values.push(element[i].value);
@@ -9,7 +9,7 @@ export function setArrayValues(element) {
 }
 
 // 連想配列にする処理
-export function setAssociativeArray(keys, values) {
+exports.setAssociativeArray = function setAssociativeArray(keys, values) {
     let data = {};
     for (var i = 0; i < keys.length; i++) {
         data[keys[i]] = values[i];
@@ -18,12 +18,12 @@ export function setAssociativeArray(keys, values) {
 }
 
 // objectをJsonに変換
-export function convertObjectToJson(associativeArray) {
+exports.convertObjectToJson = function convertObjectToJson(associativeArray) {
     return JSON.stringify(associativeArray, null, 2);
 }
 
 // ファイル読込処理
-export function readFile(filePath) {
+exports.readFile = function readFile(filePath) {
     try {
         var datas = fs.readFileSync(filePath, 'utf8');
     } catch (error) {
@@ -33,7 +33,7 @@ export function readFile(filePath) {
 }
 
 // 連想配列を配列にする処理
-export function convertAssociativeArrayToArray(datas) {
+exports.convertAssociativeArrayToArray = function convertAssociativeArrayToArray(datas) {
     var keys = Object.keys(datas);
     var values = keys.map((data) => {
         return datas[data];
@@ -43,7 +43,7 @@ export function convertAssociativeArrayToArray(datas) {
 }
 
 // ファイル書込処理
-export function writeFile(filePath, data) {
+exports.writeFile = function writeFile(filePath, data) {
     try {
         fs.writeFileSync(filePath, data);
     } catch (ex) {

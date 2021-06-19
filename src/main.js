@@ -2,9 +2,9 @@ const { BrowserWindow, app, Menu, MenuItem, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const dbSetttings = require('./common/dbSettings');
+const entity = require('./entity/link');
 
 let mainWindow;
-let linkSettingData;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -20,11 +20,15 @@ function createWindow() {
         },
     });
 
+    // DB初期処理
+    dbSetttings.initDbCreate();
+
+    // MenuBar初期処理
+    initWindowMenu();
+
     mainWindow.loadFile('./view/index.html');
 
     mainWindow.webContents.openDevTools();
-
-    initWindowMenu();
 
     mainWindow.center();
 
@@ -40,7 +44,7 @@ function createWindow() {
 function initWindowMenu() {
     let menu = new Menu();
 
-    const links = new MenuItem(
+    const linkMenu = new MenuItem(
         {
             label: 'Link',
             submenu: [
@@ -60,23 +64,19 @@ function initWindowMenu() {
     )
 
     // link設定
-    if (linkSettingData !== "") {
-        let linkNames = Object.keys(linkSettingData);
-        linkNames.forEach((linkName) => (links.submenu.append(new MenuItem({ label: linkName, click() { createNewBrowser().loadURL(linkSettingJson[linkName]) } }))));
-    }
-    menu.append(links);
+    entity.findAll().then((links) => {
+        if (links.length > 0) {
+            links.forEach((link) => (linkMenu.submenu.append(new MenuItem({ label: link.linkName, click() { createNewBrowser().loadURL(link.url) } }))));
+        }
+    });
+
+    menu.append(linkMenu);
     menu.append(linkSetting);
 
     Menu.setApplicationMenu(menu)
 }
 
 app.on('ready', createWindow);
-
-// 起動処理の完了時
-app.on('will-finish-launching', () => {
-    // 初期設定
-    initSettings();
-});
 
 // macos終了処理
 app.on('window-all-closed', () => {
@@ -119,34 +119,4 @@ ipcMain.on('show-window', (event, data) => {
     mainWindow.show();
 });
 
-// 初期設定
-function initSettings() {
-    // DB初期設定
-    dbSetttings.initDbCreate();
-    try {
-        fs.statSync('./src/settings/linkSetting.json');
-        console.log('ファイルが存在します');
-    } catch (error) {
-        if (error.code === 'ENOENT') {
-            console.log('ファイルは存在しません、作成します');
-            fs.writeFileSync('./src/settings/linkSetting.json', "");
-        } else {
-            console.log(error);
-        }
-    } finally {
-        var linkSettingFile = fs.readFileSync('./src/settings/linkSetting.json', 'utf8');
-        linkSettingData = linkSettingFile === "" ? "" : JSON.parse(linkSettingFile);
-    }
 
-    try {
-        fs.statSync('./src/data/activity.json');
-        console.log('ファイルが存在します');
-    } catch (error) {
-        if (error.code === 'ENOENT') {
-            console.log('ファイルは存在しません、作成します');
-            fs.writeFileSync('./src/data/activity.json', "");
-        } else {
-            console.log(error);
-        }
-    }
-}

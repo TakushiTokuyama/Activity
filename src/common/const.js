@@ -1,20 +1,20 @@
 // timer
-export const TIMERNUMBER = {
-    ZERO: "0",
-    W_ZERO: "00",
-    FIFTY_SIX: "59",
-    SIXTY: "60",
-    NINE: "9"
+exports.TIMERNUMBER = class TIMERNUMBER {
+    static ZERO = "0";
+    static W_ZERO = "00";
+    static FIFTY_SIX = "59";
+    static SIXTY = "60";
+    static NINE = "9";
 };
 
 // title
-export const TITLE = {
-    FILE_SAVE: "File ave message",
-    FINISH: "End message"
+exports.TITLE = class TIMERNUMBER {
+    static FILE_SAVE = "File ave message";
+    static FINISH = "End message";
 }
 
 // message
-export const MESSAGE = {
-    FILE_SAVE: "Save the file",
-    FINISH: "Thank you for your hard work"
+exports.MESSAGE = class MESSAGE {
+    static FILE_SAVE = "Save the file";
+    static FINISH = "Thank you for your hard work";
 }

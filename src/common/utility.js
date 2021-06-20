@@ -1,5 +1,5 @@
 // 配列に格納する処理
-exports.setAssociativeArray = function setArrayValues(element) {
+exports.setArrayValues = function setArrayValues(element) {
     var values = [];
     for (var i = 0; i < element.length; i++) {
         values.push(element[i].value);

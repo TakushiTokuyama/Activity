@@ -1,7 +1,4 @@
-'use strict'
-import * as utility from '../common/utility.js';
 import * as dialogBox from '../common/dialogBox.js';
-import * as constants from '../common/const.js';
 
 const setLinkSubmit = document.getElementById('setLinkSubmit');
 
@@ -10,6 +7,10 @@ const linkUrlElements = document.getElementsByClassName('linkUrl');
 
 // 初期表示
 window.onload = function () {
+    ipcRenderer.on('linkData', (result, arg) => {
+        console.log(arg);
+        console.log(result);
+    });
     let datas = utility.readFile('./src/settings/linkSetting.json');
     if (datas !== "") {
         let [links, urls] = utility.convertAssociativeArrayToArray(JSON.parse(datas));
@@ -31,11 +32,8 @@ setLinkSubmit.addEventListener('click', function () {
     // 連想配列に変換
     let linkNameAndUrls = utility.setAssociativeArray(linkNameValues, linkUrlValues);
 
-    // ObjectをJsonに変換
-    let jsonData = utility.convertObjectToJson(linkNameAndUrls);
-
-    // 設定を書き込む
-    utility.writeFile('./src/settings/linkSetting.json', jsonData);
+    // メインプロセスに送信
+    ipcRenderer.send('insertLink', linkNameAndUrls);
 
     // dialog表示
     dialogBox.message(constants.TITLE.FILE_SAVE, constants.MESSAGE.FILE_SAVE)

@@ -1,7 +1,5 @@
 'use strict'
 
-import * as constants from '../common/const.js';
-
 const show = document.getElementById('timer');
 const start = document.getElementById('start');
 const stop = document.getElementById('stop');
@@ -30,7 +28,7 @@ window.onload = function () {
     isInputAndTimerValid();
     logTextarea.disabled = true;
     reset.disabled = true;
-    getActivityCategorys();
+    setAutocompleteCategorys();
 }
 
 // startButton押下時
@@ -85,7 +83,7 @@ var timer = function () {
         setTimeAlert();
         logDisplay();
         clearInterval(interval);
-        writeActivityData();
+        sendActivityData();
         initTimer();
         return;
     }
@@ -186,47 +184,34 @@ function logDisplay() {
     logTextarea.value += `FinishTime  ${show.innerHTML}` + "\n" + `TotalTime   ${totalTime}` + "\n";
 }
 
+
 // autocompleteにcategoryを設定する
-function setAutocompleteCategorys(categorys) {
+function setAutocompleteCategorys() {
     var datalist = document.createElement('datalist');
     datalist.id = 'category_list';
-    categorys.forEach(value => {
-        var option = document.createElement('option');
-        option.value = value;
-        datalist.appendChild(option);
+    // メインプロセスに送信
+    ipcRenderer.send('getActivity');
+    // メインプロセスからデータを受け取る
+    ipcRenderer.on('setActivity', (event, data,) => {
+        // autocomplete設定
+        data.forEach(value => {
+            var option = document.createElement('option');
+            option.value = value.category;
+            datalist.appendChild(option);
+        });
+        category.appendChild(datalist);
     });
-    category.appendChild(datalist);
 }
 
-// activityのcaterogyを取得
-function getActivityCategorys() {
-    let activityFile = utility.readFile('./src/data/activity.json');
-    if (activityFile !== "") {
-        let activityJsonData = JSON.parse(activityFile);
-        let categorys = activityJsonData.map(value => value.category);
-        setAutocompleteCategorys(categorys);
-    }
-}
-
-// activityDataをactivity.jsonに書込
-function writeActivityData() {
-
-    let activityFile = utility.readFile('./src/data/activity.json');
-
-    let activityObject = activityFile !== "" ? JSON.parse(activityFile) : new Array();
-
+// activityDataを送信する
+function sendActivityData() {
     let activityData = {
         'activityDateTime': new Date().toLocaleDateString(),
         'category': category.value,
         'contents': contents.value,
-        'activityTime': `${targetHour.value} : ${targetMinutes.value} : ${targetSeconds.value}`
+        'activityTime': `${targetHour.value}:${targetMinutes.value}:${targetSeconds.value}`
     };
 
-    activityObject.push(activityData);
-
-    // ObjectをJsonに変換
-    let activityJsonData = utility.convertObjectToJson(activityObject);
-
-    // json書込
-    utility.writeFile('./src/data/activity.json', activityJsonData);
+    // メインプロセスに送信
+    ipcRenderer.send('insertActivity', activityData);
 }

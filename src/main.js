@@ -2,7 +2,8 @@ const { BrowserWindow, app, Menu, MenuItem, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const dbSetttings = require('./common/dbSettings');
-const entity = require('./entity/link');
+const linkEntity = require('./entity/link');
+const activityEntity = require('./entity/activity');
 
 let mainWindow;
 
@@ -21,7 +22,8 @@ function createWindow() {
     });
 
     // DB初期処理
-    dbSetttings.initDbCreate();
+    dbSetttings.dbCommon.initDb();
+    dbSetttings.dbCommon.initTableCreate();
 
     // MenuBar初期処理
     initWindowMenu();
@@ -59,12 +61,12 @@ function initWindowMenu() {
     const linkSetting = new MenuItem(
         {
             label: 'LinkSetting',
-            click() { mainWindow.loadFile('./view/linkSetting.html'); }
+            click() { mainWindow.loadFile('./view/linkSetting.html'); mainWindow.send('linkData', linkEntity.link.links); }
         },
     )
 
     // link設定
-    entity.findAll().then((links) => {
+    linkEntity.link.findAll().then((links) => {
         if (links.length > 0) {
             links.forEach((link) => (linkMenu.submenu.append(new MenuItem({ label: link.linkName, click() { createNewBrowser().loadURL(link.url) } }))));
         }
@@ -106,10 +108,32 @@ function createNewBrowser() {
     return linkWindow;
 }
 
+// activityを取得
+ipcMain.on('getActivity', (event, data) => {
+    console.log('getActivity');
+    dbSetttings.dbCommon.initDb();
+    activityEntity.activity.findAll().then((category) => {
+        mainWindow.webContents.send('setActivity', category);
+        // 初期化
+        activityEntity.activity.category = [];
+    });
+});
+
+// insertActivityData
+ipcMain.on('insertActivity', (event, data) => {
+    console.log('insertActivity');
+    activityEntity.activity.insert(data);
+});
+
+// insertLinkData
+ipcMain.on('insertLink', (event, data) => {
+    console.log('insertLink');
+    linkEntity.link.insert(data);
+});
+
 // メニューバーをreload
 ipcMain.on('reload', (event, data) => {
     console.log('reload');
-    linkSettingData = JSON.parse(fs.readFileSync('./src/settings/linkSetting.json', 'utf8'));
     initWindowMenu();
 });
 

@@ -9,6 +9,14 @@ exports.activity = class Activity {
         this.activityTime = activityTime;
     }
 
+    // ユニークなcategoryを返却する
+    static getUniqueCategory = function (obj, results) {
+        if (!results.includes(obj.category)) {
+            results.push(obj.category);
+            return obj.category;
+        }
+    }
+
     static insert(data) {
         dbSettings.dbCommon.initDb();
         const db = dbSettings.dbCommon.get();

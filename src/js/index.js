@@ -184,19 +184,18 @@ function logDisplay() {
     logTextarea.value += `FinishTime  ${show.innerHTML}` + "\n" + `TotalTime   ${totalTime}` + "\n";
 }
 
-
 // autocompleteにcategoryを設定する
 function setAutocompleteCategorys() {
     var datalist = document.createElement('datalist');
     datalist.id = 'category_list';
     // メインプロセスに送信
-    ipcRenderer.send('getActivity');
+    ipcRenderer.send('getCategory');
     // メインプロセスからデータを受け取る
-    ipcRenderer.on('setActivity', (event, data,) => {
-        // autocomplete設定
+    ipcRenderer.on('setCategory', (event, data) => {
+        // categoryのautocomplete設定
         data.forEach(value => {
             var option = document.createElement('option');
-            option.value = value.category;
+            option.value = value;
             datalist.appendChild(option);
         });
         category.appendChild(datalist);

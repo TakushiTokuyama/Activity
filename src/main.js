@@ -4,6 +4,7 @@ const fs = require('fs');
 const dbSetttings = require('./common/dbSettings');
 const linkEntity = require('./entity/link');
 const activityEntity = require('./entity/activity');
+const utility = require('./common/utility');
 
 let mainWindow;
 
@@ -109,11 +110,15 @@ function createNewBrowser() {
 }
 
 // activityを取得
-ipcMain.on('getActivity', (event, data) => {
-    console.log('getActivity');
+ipcMain.on('getCategory', (event, data) => {
+    console.log('getCategory');
     dbSetttings.dbCommon.initDb();
-    activityEntity.activity.findAll().then((category) => {
-        mainWindow.webContents.send('setActivity', category);
+    activityEntity.activity.findAll().then((activity) => {
+        // 重複しない値を返却
+        var category = utility.noDuplicationObjectValues(activity, activityEntity.activity.getUniqueCategory);
+
+        mainWindow.webContents.send('setCategory', category);
+
         // 初期化
         activityEntity.activity.category = [];
     });

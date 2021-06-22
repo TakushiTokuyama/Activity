@@ -50,3 +50,12 @@ exports.writeFile = function writeFile(filePath, data) {
         console.log(ex);
     }
 }
+
+// 重複しない値を返却
+exports.noDuplicationObjectValues = function noDuplicationObjectValues(object, getUniqueObj) {
+    let results = [];
+    results = object.map((obj) => {
+        return getUniqueObj(obj, results);
+    }).filter(Boolean);
+    return results
+}

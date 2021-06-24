@@ -70,6 +70,10 @@ function initWindowMenu() {
     linkEntity.link.findAll().then((links) => {
         if (links.length > 0) {
             links.forEach((link) => (linkMenu.submenu.append(new MenuItem({ label: link.linkName, click() { createNewBrowser().loadURL(link.url) } }))));
+            // 初期化
+            linkMenu.submenu = null;
+            // 初期化
+            linkEntity.link.links = [];
         }
     });
 
@@ -128,6 +132,17 @@ ipcMain.on('getCategory', (event, data) => {
 ipcMain.on('insertActivity', (event, data) => {
     console.log('insertActivity');
     activityEntity.activity.insert(data);
+});
+
+// findLinkData
+ipcMain.on('findLinkData', (event, data) => {
+    console.log('findLinkData');
+    dbSetttings.dbCommon.initDb();
+    linkEntity.link.findAll().then((links) => {
+        mainWindow.webContents.send('setLinkData', links);
+        // 初期化
+        linkEntity.link.links = [];
+    });
 });
 
 // insertLinkData

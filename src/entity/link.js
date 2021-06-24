@@ -2,7 +2,8 @@ const dbSettings = require('../common/dbSettings');
 
 exports.link = class Link {
     static links = [];
-    constructor(linkName, url) {
+    constructor(linkId, linkName, url) {
+        this.linkId = linkId;
         this.linkName = linkName;
         this.url = url;
     }

@@ -24,7 +24,8 @@ exports.dbCommon = class DbCommon {
         return new Promise((resolve, reject) => {
             db.serialize(() => {
                 let CREATE_TABLE_LINK = 'CREATE TABLE IF NOT EXISTS LINK'
-                    + '(linkName TEXT PRIMARY KEY,'
+                    + '(linkId NUMBER PRIMARY KEY,'
+                    + 'linkName TEXT NOT NULL,'
                     + 'url TEXT NOT NULL)';
 
                 let CREATE_TABLE_ACTIVITY = 'CREATE TABLE IF NOT EXISTS ACTIVITY'

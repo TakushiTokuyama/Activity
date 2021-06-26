@@ -24,12 +24,12 @@ let seconds = constants.TIMERNUMBER.W_ZERO;
 let totalTime;
 
 // 初期表示
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
     isInputAndTimerValid();
     logTextarea.disabled = true;
     reset.disabled = true;
     setAutocompleteCategorys();
-}
+});
 
 // startButton押下時
 start.addEventListener('click', function () {
@@ -85,6 +85,7 @@ var timer = function () {
         clearInterval(interval);
         sendActivityData();
         initTimer();
+        appendCategory();
         return;
     }
     return countUp();
@@ -184,9 +185,10 @@ function logDisplay() {
     logTextarea.value += `FinishTime  ${show.innerHTML}` + "\n" + `TotalTime   ${totalTime}` + "\n";
 }
 
+var datalist = document.createElement('datalist');
+
 // autocompleteにcategoryを設定する
 function setAutocompleteCategorys() {
-    var datalist = document.createElement('datalist');
     datalist.id = 'category_list';
     // メインプロセスに送信
     ipcRenderer.send('getCategory');
@@ -202,14 +204,20 @@ function setAutocompleteCategorys() {
     });
 }
 
+// categoryを要素に追加する
+function appendCategory() {
+    var option = document.createElement('option');
+    option.value = category.value;
+    datalist.appendChild(option);
+}
+
 // activityDataを送信する
 function sendActivityData() {
-    let activityData = {
-        'activityDateTime': new Date().toLocaleDateString(),
-        'category': category.value,
-        'contents': contents.value,
-        'activityTime': `${targetHour.value}:${targetMinutes.value}:${targetSeconds.value}`
-    };
+
+    let activityData = new modelActivity.activity(
+        new Date().toLocaleDateString(),
+        category.value, contents.value,
+        `${targetHour.value}:${targetMinutes.value}:${targetSeconds.value}`);
 
     // メインプロセスに送信
     ipcRenderer.send('insertActivity', activityData);

@@ -1,22 +1,15 @@
 const dbSettings = require('../common/dbSettings');
+const modelLink = require('../model/link');
 
 exports.link = class Link {
-    static links = [];
-    constructor(linkId, linkName, url) {
-        this.linkId = linkId;
-        this.linkName = linkName;
-        this.url = url;
-    }
-
-    static insert(data) {
+    static insert(datas) {
         dbSettings.dbCommon.initDb();
         const db = dbSettings.dbCommon.get();
         return new Promise((resolve, reject) => {
             db.serialize(() => {
-                let stmt = db.prepare('INSERT OR REPLACE INTO LINK (linkName,url) VALUES (?,?)');
-
-                Object.keys(data).forEach((key) => {
-                    stmt.run(key, data[key]);
+                let stmt = db.prepare('INSERT INTO LINK (linkId,linkName,url) VALUES (?,?,?) ON CONFLICT(linkId) DO UPDATE SET linkName = excluded.linkName ,url = excluded.url');
+                datas.forEach((data) => {
+                    stmt.run(data.linkId, data.linkName, data.url);
                 });
 
                 stmt.finalize((error) => {
@@ -49,11 +42,12 @@ exports.link = class Link {
                         reject(error);
                     }
                     if (rows.length > 0) {
-                        rows.forEach(row => {
-                            this.links.push(new Link(row['linkName'], row['url']));
+                        var links = rows.map(row => {
+                            return new modelLink.link(row['linkId'], row['linkName'], row['url']);
                         });
+                        return resolve(links);
                     }
-                    return resolve(this.links);
+                    return resolve(rows);
                 });
             });
         }).catch((error) => {

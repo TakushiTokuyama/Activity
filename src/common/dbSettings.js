@@ -24,7 +24,7 @@ exports.dbCommon = class DbCommon {
         return new Promise((resolve, reject) => {
             db.serialize(() => {
                 let CREATE_TABLE_LINK = 'CREATE TABLE IF NOT EXISTS LINK'
-                    + '(linkId NUMBER PRIMARY KEY,'
+                    + '(linkId NUMBER AUTO INCREMENT PRIMARY KEY,'
                     + 'linkName TEXT NOT NULL,'
                     + 'url TEXT NOT NULL)';
 

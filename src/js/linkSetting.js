@@ -6,47 +6,74 @@ const linkNameElements = document.getElementsByClassName('linkName');
 const linkUrlElements = document.getElementsByClassName('linkUrl');
 
 // 初期表示
-window.onload = function () {
-    ipcRenderer.on('linkData', (result, arg) => {
-        console.log(arg);
-        console.log(result);
-    });
-    let datas = utility.readFile('./src/settings/linkSetting.json');
-    if (datas !== "") {
-        let [links, urls] = utility.convertAssociativeArrayToArray(JSON.parse(datas));
-
-        for (var i = 0; i < links.length; i++) {
-            linkNameElements[i].value = links[i];
-            linkUrlElements[i].value = urls[i];
+document.addEventListener('DOMContentLoaded', function () {
+    // メインプロセスに送信
+    ipcRenderer.send('findLinkData');
+    // メインプロセスからデータを受信
+    ipcRenderer.on('setLinkData', (event, datas) => {
+        if (0 < datas.length) {
+            createLinkSettingHtml(0);
+            datas.forEach((data) => {
+                linkNameElements[data.linkId].value = data.linkName;
+                linkUrlElements[data.linkId].value = data.url;
+                if (7 < data.linkId) {
+                    return;
+                }
+                createLinkSettingHtml(data.linkId + 1);
+            });
+        } else {
+            // データが無い場合の初期設定
+            createLinkSettingHtml(0);
         }
-    }
-}
+    });
+});
 
 // Submit押下時
 setLinkSubmit.addEventListener('click', function () {
 
-    // 配列に変換　存在しなかったらLinkNameにNoneを設定
-    let linkNameValues = isNullSetNoneName(utility.setArrayValues(linkNameElements));
+    // 配列に変換
+    let linkNameValues = utility.setArrayValues(linkNameElements);
     let linkUrlValues = utility.setArrayValues(linkUrlElements);
 
-    // 連想配列に変換
-    let linkNameAndUrls = utility.setAssociativeArray(linkNameValues, linkUrlValues);
+    // モデルに詰替え
+    let linkNameAndUrls = convertArrayToModel(modelLink, linkNameValues, linkUrlValues);
 
     // メインプロセスに送信
     ipcRenderer.send('insertLink', linkNameAndUrls);
 
     // dialog表示
-    dialogBox.message(constants.TITLE.FILE_SAVE, constants.MESSAGE.FILE_SAVE)
+    dialogBox.message(constants.TITLE.FILE_SAVE, constants.MESSAGE.FILE_SAVE);
 
-    // メニューバーをreload
+    // pageをreload
     ipcRenderer.send('reload');
 }, false);
 
-// リンクの名前が存在しなかったらデフォルトの名前を設定する処理
-function isNullSetNoneName(values) {
-    let count = 0;
-    return values.map(value => {
-        count++;
-        return value ? value : "none" + count;
-    });
+// linkSetting用のHtmlを生成する
+function createLinkSettingHtml(index) {
+
+    var linkSettingHtml = '<div class="input-group vertical-top-5">'
+        + '<div class="col-2">'
+        + `<span class="input-group-text btn-danger">LinkSetting_${index}</span>`
+        + '</div>'
+        + '<div class="col-4">'
+        + '<input type="text" aria-label="Link" class="form-control linkName" placeholder="LinkName">'
+        + '</div>'
+        + '<div class="col-6">'
+        + '<input type="text" aria-label="URL" class="form-control linkUrl" placeholder="URL">'
+        + '</div>'
+        + '</div>';
+    let linkSettingForm = document.getElementById('linkSettingForm');
+    let mainDiv = document.createElement('div');
+    mainDiv.innerHTML = linkSettingHtml;
+    linkSettingForm.appendChild(mainDiv);
+}
+
+// モデルに詰替えする処理
+function convertArrayToModel(model, links, urls) {
+    var data = [];
+
+    for (var i = 0; i < links.length; i++) {
+        data.push(new model.link(i, links[i], urls[i]));
+    }
+    return data;
 }

@@ -8,15 +8,6 @@ exports.setArrayValues = function setArrayValues(element) {
     return values;
 }
 
-// 連想配列にする処理
-exports.setAssociativeArray = function setAssociativeArray(keys, values) {
-    let data = {};
-    for (var i = 0; i < keys.length; i++) {
-        data[keys[i]] = values[i];
-    }
-    return data;
-}
-
 // objectをJsonに変換
 exports.convertObjectToJson = function convertObjectToJson(associativeArray) {
     return JSON.stringify(associativeArray, null, 2);

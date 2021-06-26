@@ -6,6 +6,8 @@ const Chart = require('chart.js');
 
 const utility = require('./common/utility');
 const constants = require('./common/const');
+const modelActivity = require('./model/activity');
+const modelLink = require('./model/link');
 
 window.remote = remote;
 window.dialog = dialog;
@@ -15,3 +17,5 @@ window.Chart = Chart;
 
 window.utility = utility;
 window.constants = constants;
+window.modelActivity= modelActivity;
+window.modelLink = modelLink;

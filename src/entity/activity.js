@@ -1,14 +1,7 @@
 const dbSettings = require('../common/dbSettings');
+const activityModel = require('../model/activity');
 
 exports.activity = class Activity {
-    static category = [];
-    constructor(activityDateTime, category, contents, activityTime) {
-        this.activityDateTime = activityDateTime;
-        this.category = category
-        this.contents = contents;
-        this.activityTime = activityTime;
-    }
-
     // ユニークなcategoryを返却する
     static getUniqueCategory = function (obj, results) {
         if (!results.includes(obj.category)) {
@@ -54,11 +47,12 @@ exports.activity = class Activity {
                         reject(error);
                     }
                     if (rows.length > 0) {
-                        rows.forEach(row => {
-                            this.category.push(new Activity(row['activityDateTime'], row['category'], row['contents'], row['activityTime']));
+                        let activitys = rows.map(row => {
+                            return new activityModel.activity(row['activityDateTime'], row['category'], row['contents'], row['activityTime']);
                         });
+                        return resolve(activitys);
                     }
-                    return resolve(this.category);
+                    return resolve(rows);
                 });
             });
         }).catch((error) => {

@@ -1,10 +1,10 @@
 const { BrowserWindow, app, Menu, MenuItem, ipcMain } = require('electron');
 const path = require('path');
-const fs = require('fs');
 const dbSetttings = require('./common/dbSettings');
 const linkEntity = require('./entity/link');
 const activityEntity = require('./entity/activity');
 const utility = require('./common/utility');
+const modelLink = require('./model/link');
 
 let mainWindow;
 
@@ -70,6 +70,8 @@ function initWindowMenu() {
     linkEntity.link.findAll().then((links) => {
         if (links.length > 0) {
             links.forEach((link) => (linkMenu.submenu.append(new MenuItem({ label: link.linkName, click() { createNewBrowser().loadURL(link.url) } }))));
+            // 初期化
+            linkMenu.submenu = null;
         }
     });
 
@@ -114,13 +116,9 @@ ipcMain.on('getCategory', (event, data) => {
     console.log('getCategory');
     dbSetttings.dbCommon.initDb();
     activityEntity.activity.findAll().then((activity) => {
-        // 重複しない値を返却
+        // 重複しないcategoryを返却
         var category = utility.noDuplicationObjectValues(activity, activityEntity.activity.getUniqueCategory);
-
         mainWindow.webContents.send('setCategory', category);
-
-        // 初期化
-        activityEntity.activity.category = [];
     });
 });
 
@@ -130,16 +128,26 @@ ipcMain.on('insertActivity', (event, data) => {
     activityEntity.activity.insert(data);
 });
 
+// findLinkData
+ipcMain.on('findLinkData', (event, data) => {
+    console.log('findLinkData');
+    dbSetttings.dbCommon.initDb();
+    linkEntity.link.findAll().then((links) => {
+        mainWindow.webContents.send('setLinkData', links);
+    });
+});
+
 // insertLinkData
 ipcMain.on('insertLink', (event, data) => {
     console.log('insertLink');
     linkEntity.link.insert(data);
 });
 
-// メニューバーをreload
+// pageをreload
 ipcMain.on('reload', (event, data) => {
     console.log('reload');
     initWindowMenu();
+    mainWindow.loadFile('./view/linkSetting.html');
 });
 
 // windowを表示させる

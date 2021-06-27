@@ -5,7 +5,7 @@ const fs = require('fs');
 const Chart = require('chart.js');
 
 const utility = require('./common/utility');
-const constants = require('./common/const');
+const CONSTANTS = require('./common/const');
 const modelActivity = require('./model/activity');
 const modelLink = require('./model/link');
 
@@ -16,6 +16,6 @@ window.fs = fs;
 window.Chart = Chart;
 
 window.utility = utility;
-window.constants = constants;
-window.modelActivity= modelActivity;
+window.CONSTANTS = CONSTANTS;
+window.modelActivity = modelActivity;
 window.modelLink = modelLink;

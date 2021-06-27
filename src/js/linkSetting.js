@@ -42,7 +42,7 @@ setLinkSubmit.addEventListener('click', function () {
     ipcRenderer.send('insertLink', linkNameAndUrls);
 
     // dialog表示
-    dialogBox.message(constants.TITLE.FILE_SAVE, constants.MESSAGE.FILE_SAVE);
+    dialogBox.message(CONSTANTS.TITLE.FILE_SAVE, CONSTANTS.MESSAGE.FILE_SAVE);
 
     // pageをreload
     ipcRenderer.send('reload');

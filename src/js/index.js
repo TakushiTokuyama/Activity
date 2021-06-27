@@ -1,5 +1,4 @@
 'use strict'
-
 const show = document.getElementById('timer');
 const start = document.getElementById('start');
 const stop = document.getElementById('stop');
@@ -16,9 +15,9 @@ const category = document.getElementById('category');
 const contents = document.getElementById('contents');
 
 let interval;
-let hour = constants.TIMERNUMBER.W_ZERO;
-let minutes = constants.TIMERNUMBER.W_ZERO;
-let seconds = constants.TIMERNUMBER.W_ZERO;
+let hour = CONSTANTS.TIMERNUMBER.W_ZERO;
+let minutes = CONSTANTS.TIMERNUMBER.W_ZERO;
+let seconds = CONSTANTS.TIMERNUMBER.W_ZERO;
 
 // 合計時間
 let totalTime;
@@ -68,11 +67,11 @@ targetSeconds.addEventListener('input', isInputAndTimerValid, false);
 var timer = function () {
     function countUp() {
         seconds = advanceTime(seconds);
-        if (seconds > constants.TIMERNUMBER.FIFTY_SIX) {
-            seconds = constants.TIMERNUMBER.W_ZERO;
+        if (seconds > CONSTANTS.TIMERNUMBER.FIFTY_SIX) {
+            seconds = CONSTANTS.TIMERNUMBER.W_ZERO;
             minutes = advanceTime(minutes);
-            if (minutes > constants.TIMERNUMBER.FIFTY_SIX) {
-                minutes = constants.TIMERNUMBER.w_zero;
+            if (minutes > CONSTANTS.TIMERNUMBER.FIFTY_SIX) {
+                minutes = CONSTANTS.TIMERNUMBER.w_zero;
                 hour = advanceTime(hour);
             }
         }
@@ -94,22 +93,22 @@ var timer = function () {
 // 1秒づつ時間を進める
 var advanceTime = (time) => {
     time++;
-    return time > constants.TIMERNUMBER.NINE ? time : `0${time}`;
+    return time > CONSTANTS.TIMERNUMBER.NINE ? time : `0${time}`;
 };
 
 // Timer初期化処理
 var initTimer = function () {
-    hour = constants.TIMERNUMBER.W_ZERO;
-    minutes = constants.TIMERNUMBER.W_ZERO;
-    seconds = constants.TIMERNUMBER.W_ZERO;
+    hour = CONSTANTS.TIMERNUMBER.W_ZERO;
+    minutes = CONSTANTS.TIMERNUMBER.W_ZERO;
+    seconds = CONSTANTS.TIMERNUMBER.W_ZERO;
     show.innerHTML = `${hour} : ${minutes} : ${seconds}`;
 }
 
 // Timerの妥当性確認
 var setTimerValidation = function () {
-    if ((constants.TIMERNUMBER.ZERO <= parseInt(targetHour.value) && parseInt(targetHour.value) <= constants.TIMERNUMBER.SIXTY) &&
-        (constants.TIMERNUMBER.ZERO <= parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= constants.TIMERNUMBER.SIXTY) &&
-        (constants.TIMERNUMBER.ZERO < parseInt(targetSeconds.value) && parseInt(targetSeconds.value) <= constants.TIMERNUMBER.SIXTY)) {
+    if ((CONSTANTS.TIMERNUMBER.ZERO <= parseInt(targetHour.value) && parseInt(targetHour.value) <= CONSTANTS.TIMERNUMBER.SIXTY) &&
+        (CONSTANTS.TIMERNUMBER.ZERO <= parseInt(targetMinutes.value) && parseInt(targetMinutes.value) <= CONSTANTS.TIMERNUMBER.SIXTY) &&
+        (CONSTANTS.TIMERNUMBER.ZERO < parseInt(targetSeconds.value) && parseInt(targetSeconds.value) <= CONSTANTS.TIMERNUMBER.SIXTY)) {
         return true;
     }
     return false;
@@ -145,8 +144,8 @@ function setCorrectFormatTime() {
 function setTimeAlert() {
     let w = remote.getCurrentWindow();
     let setTimerAlertMessage = dialog.showMessageBox(w, {
-        title: constants.TITLE.FINISH,
-        message: constants.MESSAGE.FINISH,
+        title: CONSTANTS.TITLE.FINISH,
+        message: CONSTANTS.MESSAGE.FINISH,
         detail: `${show.innerHTML}`
     }).then((event) => {
         if (event) {
@@ -165,20 +164,20 @@ function logDisplay() {
     if (totalTime) {
         currentTimes = show.innerHTML.replaceAll(' ', '').split(':').map(Number).reverse();
         totalTimes = totalTime.replaceAll(' ', '').split(':').map(Number).reverse();
-        if (currentTimes[0] + totalTimes[0] >= constants.TIMERNUMBER.FIFTY_SIX) {
-            totalTimes[0] = currentTimes[0] + totalTimes[0] - constants.TIMERNUMBER.SIXTY;
+        if (currentTimes[0] + totalTimes[0] >= CONSTANTS.TIMERNUMBER.FIFTY_SIX) {
+            totalTimes[0] = currentTimes[0] + totalTimes[0] - CONSTANTS.TIMERNUMBER.SIXTY;
             totalTimes[1]++;
         } else {
             totalTimes[0] += currentTimes[0];
         }
 
-        if (currentTimes[1] + totalTimes[1] >= constants.TIMERNUMBER.FIFTY_SIX) {
-            totalTimes[1] = currentTimes[1] + totalTimes[1] - constants.TIMERNUMBER.SIXTY;
+        if (currentTimes[1] + totalTimes[1] >= CONSTANTS.TIMERNUMBER.FIFTY_SIX) {
+            totalTimes[1] = currentTimes[1] + totalTimes[1] - CONSTANTS.TIMERNUMBER.SIXTY;
             totalTimes[2]++;
         } else {
             totalTimes[1] += currentTimes[1];
         }
-        totalTime = (constants.TIMERNUMBER.W_ZERO + totalTimes[2]).slice(-2) + ' : ' + (constants.TIMERNUMBER.W_ZERO + totalTimes[1]).slice(-2) + ' : ' + (constants.TIMERNUMBER.W_ZERO + totalTimes[0]).slice(-2);
+        totalTime = (CONSTANTS.TIMERNUMBER.W_ZERO + totalTimes[2]).slice(-2) + ' : ' + (CONSTANTS.TIMERNUMBER.W_ZERO + totalTimes[1]).slice(-2) + ' : ' + (CONSTANTS.TIMERNUMBER.W_ZERO + totalTimes[0]).slice(-2);
     } else {
         totalTime = show.innerHTML;
     }
@@ -217,8 +216,24 @@ function sendActivityData() {
     let activityData = new modelActivity.activity(
         new Date().toLocaleDateString(),
         category.value, contents.value,
-        `${targetHour.value}:${targetMinutes.value}:${targetSeconds.value}`);
+        activityTimeCalc());
 
     // メインプロセスに送信
     ipcRenderer.send('insertActivity', activityData);
+}
+
+// 活動時間を計算する
+function activityTimeCalc() {
+    let activityTime = CONSTANTS.ACTIVITY_TIME.INT_ZERO;
+    if (parseInt(targetMinutes.value) >= CONSTANTS.ACTIVITY_TIME.FORTY) {
+        activityTime += CONSTANTS.ACTIVITY_TIME.INT_ZERO_POINT_SEVEN_FIVE;
+    } else if (parseInt(targetMinutes.value) >= CONSTANTS.ACTIVITY_TIME.THIRTY) {
+        activityTime += CONSTANTS.ACTIVITY_TIME.INT_ZERO_POINT_FIVE;
+    } else if (parseInt(targetMinutes.value) >= CONSTANTS.ACTIVITY_TIME.FIFTEEN) {
+        activityTime += CONSTANTS.ACTIVITY_TIME.INT_ZERO_POINT_TWO_FIVE;
+    }
+
+    activityTime += parseInt(targetHour.value);
+
+    return activityTime.toString();
 }

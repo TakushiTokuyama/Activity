@@ -1,15 +1,11 @@
 // calender作成
-function createCalender(today, addMonth) {
+export function createCalender(today, addMonth) {
     // 月初と月末を返却する
     var [beginingOfTheMonth, lastOfTheMonth] = returnFirstDayAndlastDay(today, addMonth);
-
     // 月初の曜日
     let beginingOfTheMonthDayOfTheWeek = beginingOfTheMonth.getDay();
     // 月末日
     let lastOfTheMonthDay = lastOfTheMonth.getDate();
-
-    console.log(lastOfTheMonth);
-
     // 1か月分の日にち
     let weeks = new Array(42);
     // 日数を格納
@@ -27,7 +23,7 @@ function returnFirstDayAndlastDay(today, addMonth) {
 }
 
 // １週ごとに分割
-function splitWeeks(weeks) {
+export function splitWeeks(weeks) {
     let weekly = [];
     let week = [];
 

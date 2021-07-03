@@ -37,3 +37,16 @@ export function splitWeeks(weeks) {
     }
     return weekly;
 }
+
+// yyyy/mm/dd書式の現在週の日付配列に格納
+export function getCurrentWeekDays(weeks, currentDate) {
+    var currentWeek = [];
+    for (var i = 0; i < weeks[0].length; i++) {
+        if (weeks[0][i]) {
+            currentWeek.push(new Date(currentDate.getFullYear(), currentDate.getMonth(), weeks[0][i]).toLocaleDateString());
+        } else {
+            currentWeek.push("");
+        }
+    }
+    return currentWeek;
+}

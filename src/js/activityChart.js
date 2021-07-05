@@ -67,35 +67,46 @@ ipcRenderer.on('setActivity', (event, activity) => {
         glaphData.push(data);
     }
 
+    let options = {
+        plugins: {
+            tooltip: {
+                filter: function (item) {
+                    return (item.parsed.y > 0);
+                }
+            },
+            title: {
+                display: true,
+                text: `today:${currentDate.toLocaleDateString()}`
+            },
+            legend: {
+                display: false,
+            }
+        },
+        scales: {
+            x: {
+                stacked: true
+            },
+            y: {
+                ticks: {
+                    stepSize: 0.5,
+                    suggestedMax: 24,
+                    beginAtZero: true,
+                    callback: function (value) {
+                        return value + 'h'
+                    }
+                },
+                stacked: true,
+            },
+        }
+    }
+
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: currentWeek[0],
             datasets: glaphData
         },
-        options: {
-            plugins: {
-                legend: {
-                    display: false,
-                }
-            },
-            scales: {
-                x: {
-                    stacked: true
-                },
-                y: {
-                    ticks: {
-                        stepSize: 0.5,
-                        suggestedMax: 24,
-                        beginAtZero: true,
-                        callback: function (value, index, values) {
-                            return value + 'h'
-                        }
-                    },
-                    stacked: true,
-                },
-            }
-        }
+        options: options
     });
 });
 

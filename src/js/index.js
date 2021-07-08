@@ -213,10 +213,12 @@ function appendCategory() {
 // activityDataを送信する
 function sendActivityData() {
 
+    let currentDate = new Date();
+
     let activityData = new modelActivity.activity(
-        new Date().toLocaleDateString(),
+        currentDate.toLocaleDateString(),
         category.value, contents.value,
-        activityTimeCalc());
+        activityTimeCalc(), currentDate.getDate());
 
     // メインプロセスに送信
     ipcRenderer.send('insertActivity', activityData);

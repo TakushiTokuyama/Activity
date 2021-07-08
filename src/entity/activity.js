@@ -15,8 +15,8 @@ exports.activity = class Activity {
         const db = dbSettings.dbCommon.get();
         return new Promise((resolve, reject) => {
             db.serialize(() => {
-                let stmt = db.prepare('INSERT INTO ACTIVITY (activityDateTime,category,contents,activityTime) VALUES (?,?,?,?)');
-                stmt.run(data.activityDateTime, data.category, data.contents, data.activityTime);
+                let stmt = db.prepare('INSERT INTO ACTIVITY (activityDateTime,category,contents,activityTime, activityDate) VALUES (?,?,?,?,?)');
+                stmt.run(data.activityDateTime, data.category, data.contents, data.activityTime, data.activityDate);
                 stmt.finalize((error) => {
                     if (error) {
                         console.log(error);
@@ -48,7 +48,7 @@ exports.activity = class Activity {
                     }
                     if (rows.length > 0) {
                         let activitys = rows.map(row => {
-                            return new activityModel.activity(row['activityDateTime'], row['category'], row['contents'], row['activityTime']);
+                            return new activityModel.activity(row['activityDateTime'], row['category'], row['contents'], row['activityTime'], row['activityDate']);
                         });
                         return resolve(activitys);
                     }

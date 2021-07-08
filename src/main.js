@@ -11,7 +11,7 @@ let mainWindow;
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1000,
-        height: 500,
+        height: 550,
         resizable: false,
         maximizable: false,
         webPreferences: {
@@ -119,6 +119,16 @@ ipcMain.on('getCategory', (event, data) => {
         // 重複しないcategoryを返却
         var category = utility.noDuplicationObjectValues(activity, activityEntity.activity.getUniqueCategory);
         mainWindow.webContents.send('setCategory', category);
+        mainWindow.webContents.send('setActivity', activity);
+    });
+});
+
+// activityを取得
+ipcMain.on('getWeekActivity', (event, data) => {
+    console.log('getWeekActivity');
+    dbSetttings.dbCommon.initDb();
+    activityEntity.activity.findAll().then((activity) => {
+        mainWindow.webContents.send('sendActivity', activity);
     });
 });
 
@@ -143,11 +153,10 @@ ipcMain.on('insertLink', (event, data) => {
     linkEntity.link.insert(data);
 });
 
-// pageをreload
-ipcMain.on('reload', (event, data) => {
-    console.log('reload');
+// windowMenuを初期化
+ipcMain.on('initWindowMenu', (event, data) => {
+    console.log('initWindowMenu');
     initWindowMenu();
-    mainWindow.loadFile('./view/linkSetting.html');
 });
 
 // windowを表示させる

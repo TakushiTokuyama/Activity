@@ -33,7 +33,8 @@ exports.dbCommon = class DbCommon {
                     + 'activityDateTime TEXT NOT NULL,'
                     + 'category TEXT NOT NULL,'
                     + 'contents TEXT NOT NULL,'
-                    + 'activityTime TEXT NOT NULL)';
+                    + 'activityTime TEXT NOT NULL,'
+                    + 'activityDate TEXT NOT NULL)';
 
                 db.run(CREATE_TABLE_LINK, (error) => {
                     if (error) {

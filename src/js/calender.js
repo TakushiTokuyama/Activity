@@ -39,13 +39,8 @@ export function splitWeeks(weeks) {
 }
 
 // yyyy/mm/dd書式の現在週の日付配列に格納
-export function getCurrentWeekDays(weeks, currentDate) {
-
-    let currentWeek = weeks.filter((week) => {
-        return week.includes(currentDate.getDate());
-    });
-
-    let result = currentWeek[0].map((currentDay) => {
+export function getCurrentWeekDays(currentWeekDays, currentDate) {
+    let result = currentWeekDays.map((currentDay) => {
         return currentDay !== "" ? new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDay).toLocaleDateString() : "";
     });
 

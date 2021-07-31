@@ -18,7 +18,8 @@ const borderColor = [
     'rgba(255, 159, 64, 1)'
 ];
 
-const dailyChartOtions = {
+// chartの設定
+const chartOtions = {
     plugins: {
         tooltip: {
             filter: function (item) {
@@ -52,41 +53,7 @@ const dailyChartOtions = {
     },
 }
 
-const weeklyChartOtions = {
-    plugins: {
-        tooltip: {
-            filter: function (item) {
-                return (item.parsed.y > 0);
-            }
-        },
-        title: {
-            display: true,
-            text: ''
-
-        },
-        legend: {
-            display: false,
-        }
-    },
-    scales: {
-        x: {
-            stacked: true
-        },
-        y: {
-            ticks: {
-                stepSize: 10,
-                suggestedMax: 200,
-                beginAtZero: true,
-                callback: function (value) {
-                    return value + 'h'
-                }
-            },
-            stacked: true,
-        },
-    },
-}
-
-// 基本となるdata
+// chartのbaseData
 export function getBaseData() {
     let baseData = {
         label: '',
@@ -98,28 +65,37 @@ export function getBaseData() {
     return baseData;
 }
 
-// 日ごとのグラフ生成
+// chartの生成
 export function createActivityChart(ctx, labelData, chartData, currentDate, chartTitle) {
-    let chartOptions = chartTitle === 'Day' ? dailyChartOtions : weeklyChartOtions;
     let activityChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labelData,
             datasets: chartData
         },
-        options: chartOptions
+        options: chartOtions
     });
     activityChart['options']['plugins']['title'].text = `${chartTitle}Chart:${currentDate.toLocaleDateString()}`;
     return activityChart;
 }
 
+// chartの更新
 export function updateActivityChart(activityChart, labelData, chartData, currentDate, chartTitle) {
-    let chartOptions = chartTitle === 'Day' ? dailyChartOtions : weeklyChartOtions;
+
     activityChart['data'].labels = labelData;
     activityChart['data'].datasets = chartData;
-    activityChart['options'] = chartOptions;
-    activityChart['options']['plugins']['title'].text = `${chartTitle}Chart:${currentDate.toLocaleDateString()}`;
+    activityChart['options'] = setChartOptions(currentDate, chartTitle);
+
     activityChart.update();
 
     return activityChart;
+}
+
+// optionsの設定
+function setChartOptions(currentDate, chartTitle) {
+    chartOtions.scales.y.ticks.stepSize = chartTitle === 'Day' ? 0.5 : 5;
+    chartOtions.scales.y.ticks.suggestedMax = chartTitle === 'Day' ? 24 : 200;
+    chartOtions.plugins.title.text = `${chartTitle}Chart:${currentDate.toLocaleDateString()}`;
+
+    return chartOtions;
 }

@@ -203,11 +203,20 @@ function setAutocompleteCategorys() {
     });
 }
 
-// categoryを要素に追加する
+// category.valueが存在していたら要素に追加する
 function appendCategory() {
-    var option = document.createElement('option');
-    option.value = category.value;
-    datalist.appendChild(option);
+    for (var i = 0; i < category.list.options.length; i++) {
+        if (category.list.options[i].value === category.value) {
+            break;
+        }
+
+        if (i === category.list.options.length - 1) {
+            var option = document.createElement('option');
+            option.value = category.value;
+            datalist.appendChild(option);
+            category.appendChild(datalist);
+        }
+    }
 }
 
 // activityDataを送信する
